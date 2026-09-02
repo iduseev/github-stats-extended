@@ -33,9 +33,9 @@ const data_stats = {
       repositories: {
         totalCount: 5,
         nodes: [
-          { name: "test-repo-1", stargazers: { totalCount: 100 } },
-          { name: "test-repo-2", stargazers: { totalCount: 100 } },
-          { name: "test-repo-3", stargazers: { totalCount: 100 } },
+          { name: "test-repo-1", stargazerCount: 100 },
+          { name: "test-repo-2", stargazerCount: 100 },
+          { name: "test-repo-3", stargazerCount: 100 },
         ],
         pageInfo: {
           hasNextPage: true,
@@ -64,8 +64,8 @@ const data_repo = {
     user: {
       repositories: {
         nodes: [
-          { name: "test-repo-4", stargazers: { totalCount: 50 } },
-          { name: "test-repo-5", stargazers: { totalCount: 50 } },
+          { name: "test-repo-4", stargazerCount: 50 },
+          { name: "test-repo-5", stargazerCount: 50 },
         ],
         pageInfo: {
           hasNextPage: false,
@@ -81,11 +81,11 @@ const data_repo_zero_stars = {
     user: {
       repositories: {
         nodes: [
-          { name: "test-repo-1", stargazers: { totalCount: 100 } },
-          { name: "test-repo-2", stargazers: { totalCount: 100 } },
-          { name: "test-repo-3", stargazers: { totalCount: 100 } },
-          { name: "test-repo-4", stargazers: { totalCount: 0 } },
-          { name: "test-repo-5", stargazers: { totalCount: 0 } },
+          { name: "test-repo-1", stargazerCount: 100 },
+          { name: "test-repo-2", stargazerCount: 100 },
+          { name: "test-repo-3", stargazerCount: 100 },
+          { name: "test-repo-4", stargazerCount: 0 },
+          { name: "test-repo-5", stargazerCount: 0 },
         ],
         pageInfo: {
           hasNextPage: true,
@@ -166,6 +166,15 @@ describe("Test fetchStats", () => {
       totalIssuesCommented: 0,
       rank,
     });
+  });
+
+  it("should request scalar star counts supported by fine-grained PATs", async () => {
+    await fetchStats("anuraghazra");
+
+    const request = JSON.parse(mock.history.post[0].data);
+
+    expect(request.query).toContain("stargazerCount");
+    expect(request.query).not.toMatch(/\bstargazers\s*\{/);
   });
 
   it("should stop fetching when there are repos with zero stars", async () => {
