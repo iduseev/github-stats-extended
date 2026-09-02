@@ -81,9 +81,6 @@ const data_repo_zero_stars = {
     user: {
       repositories: {
         nodes: [
-          { name: "test-repo-1", stargazerCount: 100 },
-          { name: "test-repo-2", stargazerCount: 100 },
-          { name: "test-repo-3", stargazerCount: 100 },
           { name: "test-repo-4", stargazerCount: 0 },
           { name: "test-repo-5", stargazerCount: 0 },
         ],
@@ -178,6 +175,8 @@ describe("Test fetchStats", () => {
   });
 
   it("should stop fetching when there are repos with zero stars", async () => {
+    process.env.FETCH_MULTI_PAGE_STARS = "true";
+    loadConfigFromEnv();
     mock.reset();
     mock
       .onPost("https://api.github.com/graphql")
@@ -216,6 +215,7 @@ describe("Test fetchStats", () => {
       totalIssuesCommented: 0,
       rank,
     });
+    expect(mock.history.post).toHaveLength(2);
   });
 
   it("should throw error", async () => {
