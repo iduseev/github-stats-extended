@@ -29,7 +29,7 @@ const STATS_MOCK_RESPONSE = {
       followers: { totalCount: 0 },
       repositories: {
         totalCount: 1,
-        nodes: [{ name: REPO, stargazers: { totalCount: 1 } }],
+        nodes: [{ name: REPO, stargazerCount: 1 }],
         pageInfo: {
           hasNextPage: false,
           endCursor: "cursor",
